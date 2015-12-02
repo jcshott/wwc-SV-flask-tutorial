@@ -2,7 +2,7 @@ from flask import Flask, render_template, flash, request, url_for, redirect, ses
 from wtforms import Form, BooleanField, TextField, PasswordField, validators
 from passlib.hash import sha256_crypt
 from MySQLdb import escape_string as thwart
-import gc
+import gc, sys
 from content_management import Content, connect_to_db
 
 app = Flask(__name__)
@@ -21,7 +21,8 @@ class RegistrationForm(Form):
 
 @app.route('/')
 def homepage():
-    return render_template("main.html")
+	print("homepage")
+	return render_template("main.html")
 
 @app.route('/dashboard')
 def dashboard_page():
@@ -29,7 +30,7 @@ def dashboard_page():
 
 @app.route('/register/', methods=["GET", "POST"])
 def register_page():
-	print("register page")
+
 	try:
 		form = RegistrationForm(request.form)
 
@@ -40,7 +41,7 @@ def register_page():
 			c, conn = connect_to_db()
 
 			x = c.execute("SELECT * FROM users WHERE username = (%s)", (thwart(username)))
-			print(int(x))
+
 			if int(x) > 0:
 				flash("That username is already taken, please choose another")
 				return render_template('register.html', form=form)
