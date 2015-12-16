@@ -21,7 +21,6 @@ class RegistrationForm(Form):
 
 @app.route('/')
 def homepage():
-	print("homepage")
 	return render_template("main.html")
 
 @app.route('/dashboard')
@@ -49,14 +48,13 @@ def register_page():
 				c.execute("INSERT INTO users (username, password, email, tracking) VALUES (%s, %s, %s, %s)",
                           (thwart(username), thwart(password), thwart(email), thwart("/introduction-to-python-programming/")))
 				conn.commit()
-				flash("Thanks for registering!")
 				c.close()
 				conn.close()
 				gc.collect()
 
 				session["logged_in"] = True
 				session['username'] = username
-
+				flash("Thank you for registering")
 				return redirect(url_for('dashboard_page'))
 		
 		return render_template('register.html', form=form)
